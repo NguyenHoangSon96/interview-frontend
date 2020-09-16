@@ -1,17 +1,24 @@
-import { createStore } from 'redux'
+import { createStore, combineReducers , applyMiddleware, compose  } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import { createLogger } from 'redux-logger';
 
-const initialState = {
-  sidebarShow: 'responsive'
-}
+import rootReducer from "./reducers/rootReducer";
+import userReducer from "./reducers/userReducer";
+import bookingReducer from "./reducers/bookingReducer";
 
-const changeState = (state = initialState, { type, ...rest }) => {
-  switch (type) {
-    case 'set':
-      return {...state, ...rest }
-    default:
-      return state
-  }
-}
+const loggerMiddleware = createLogger();
 
-const store = createStore(changeState)
-export default store
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(
+  combineReducers({
+    root: rootReducer,
+    user: userReducer,
+    booking: bookingReducer,
+  }),
+  composeEnhancers(applyMiddleware(
+    thunkMiddleware,
+    loggerMiddleware,
+  )),
+)
+export default store;
