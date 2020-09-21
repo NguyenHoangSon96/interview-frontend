@@ -14,27 +14,33 @@ import {
   CRow
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import {createAccount} from '../../../actions/userAction'
 import validateRegisterAccount from "../../../validator/validateRegisterAccount";
+import {REGISTER_URL} from "../../../actions/endpoints";
+import axios from "axios";
+import {RESPONSE_STATUS_FAIL, RESPONSE_STATUS_SUCCESS} from "../../../constant/commonConstant";
 
-const Register = (props) => {
-  let [userName, setUsername] = useState('');
+function Register(props) {
+  let [username, setUsername] = useState('');
   let [email, setEmail] = useState('');
   let [password, setPassword] = useState('');
   let [repeatPassword, setRepeatPassword] = useState('');
   let [validateInput, setValidateInput] = useState(undefined);
 
-  const submitForm = (e) => {
-    // console.log(userName);
-    // console.log(email);
-    console.log(password);
-    console.log(repeatPassword);
-
-    const validateresult = validateRegisterAccount(userName, email, password, repeatPassword);
+  const submitForm = async (e) => {
+    const validateresult = validateRegisterAccount(username, email, password, repeatPassword);
     setValidateInput(validateresult);
-    console.log(validateresult)
     if (validateresult) return
 
+    try {
+      const { data } = await axios.post(REGISTER_URL, {username, email, password});
+      if (data.status === RESPONSE_STATUS_SUCCESS) {
+        props.history.push('/login')
+        // TODO notify success
+      } else {
+      }
+    } catch (e) {
+    }
+    // TODO check username ngay khi type
   }
 
   return (
@@ -44,6 +50,7 @@ const Register = (props) => {
           <CCol md="9" lg="7" xl="6">
             <CCard className="mx-4">
               <CCardBody className="p-4">
+
                 <CForm>
                   <h1>Register</h1>
                   <p className="text-muted">Create your account</p>
@@ -113,7 +120,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    createAccount: () => dispatch(createAccount()),
   }
 }
 

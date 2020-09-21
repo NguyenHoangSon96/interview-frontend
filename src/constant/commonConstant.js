@@ -1,0 +1,2 @@
+export const RESPONSE_STATUS_SUCCESS = 'SUCCESS';
+export const RESPONSE_STATUS_FAIL = 'FAIL';

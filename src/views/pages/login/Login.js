@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Link } from 'react-router-dom'
 import {
   CButton,
@@ -15,8 +15,33 @@ import {
   CRow
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import {LOGIN_URL} from "../../../actions/endpoints";
+import axios from "axios";
+import {login} from "../../../actions/userAction";
+import {connect} from "react-redux";
+import {RESPONSE_STATUS_SUCCESS} from "../../../constant/commonConstant";
+import {SET_USER_PROFILE} from "../../../actions/actionType";
 
-const Login = () => {
+function Login(props) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const login = async () => {
+    const response = await axios.post(LOGIN_URL, {username, password});
+    if (response.data.status === RESPONSE_STATUS_SUCCESS) {
+      props.setUserProfile(response.data.data);
+
+      if (props.from) {
+        alert(props.from)
+        props.history.push(props.from);
+      } else {
+        props.history.push('/dashboard');
+      }
+    } else {
+      alert(response.data.message)
+    }
+  }
+
   return (
     <div className="c-app c-default-layout flex-row align-items-center">
       <CContainer>
@@ -34,7 +59,7 @@ const Login = () => {
                           <CIcon name="cil-user" />
                         </CInputGroupText>
                       </CInputGroupPrepend>
-                      <CInput type="text" placeholder="Username" autoComplete="username" />
+                      <CInput onChange={(e) => setUsername(e.target.value)} type="text" placeholder="Username" autoComplete="username" />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupPrepend>
@@ -42,11 +67,11 @@ const Login = () => {
                           <CIcon name="cil-lock-locked" />
                         </CInputGroupText>
                       </CInputGroupPrepend>
-                      <CInput type="password" placeholder="Password" autoComplete="current-password" />
+                      <CInput onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password" autoComplete="current-password" />
                     </CInputGroup>
                     <CRow>
                       <CCol xs="6">
-                        <CButton color="primary" className="px-4">Login</CButton>
+                        <CButton onClick={login} color="primary" className="px-4">Login</CButton>
                       </CCol>
                       <CCol xs="6" className="text-right">
                         <CButton color="link" className="px-0">Forgot password?</CButton>
@@ -75,4 +100,12 @@ const Login = () => {
   )
 }
 
-export default Login
+function mapStateToProps(){return{}}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setUserProfile: (data) => dispatch({type: SET_USER_PROFILE, data})
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

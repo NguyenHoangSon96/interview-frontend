@@ -8,7 +8,9 @@ import { CContainer, CFade } from '@coreui/react'
 
 // routes config
 import routes from '../routes'
-  
+import Dashboard from "../views/dashboard/Dashboard";
+import PrivateRoute from "../views/authen/PrivateRoute";
+
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
@@ -21,20 +23,21 @@ const TheContent = () => {
       <CContainer fluid>
         <Suspense fallback={loading}>
           <Switch>
-            {routes.map((route, idx) => {
-              return route.component && (
-                <Route
-                  key={idx}
-                  path={route.path}
-                  exact={route.exact}
-                  name={route.name}
-                  render={props => (
-                    <CFade>
-                      <route.component {...props} />
-                    </CFade>
-                  )} />
-              )
-            })}
+            <PrivateRoute path="/dashboard" component={Dashboard}/>
+            {/*{routes.map((route, idx) => {*/}
+            {/*  return route.component && (*/}
+            {/*    <Route*/}
+            {/*      key={idx}*/}
+            {/*      path={route.path}*/}
+            {/*      exact={route.exact}*/}
+            {/*      name={route.name}*/}
+            {/*      render={props => (*/}
+            {/*        <CFade>*/}
+            {/*          <route.component {...props} />*/}
+            {/*        </CFade>*/}
+            {/*      )} />*/}
+            {/*  )*/}
+            {/*})}*/}
             <Redirect from="/" to="/dashboard" />
           </Switch>
         </Suspense>
