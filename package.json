@@ -41,7 +41,7 @@
     "react": "^16.13.1",
     "react-app-polyfill": "^1.0.6",
     "react-dom": "^16.13.1",
-    "react-notifications": "^1.7.2",
+    "react-notifications-component": "^2.4.1",
     "react-redux": "^7.2.1",
     "redux": "4.0.5",
     "redux-logger": "^3.0.6",
@@ -52,6 +52,7 @@
   "devDependencies": {
     "@types/lodash": "^4.14.161",
     "@types/react": "^16.9.49",
+    "@types/react-notifications-component": "^2.4.0",
     "@types/react-redux": "^7.1.9",
     "@types/redux": "^3.6.0",
     "@types/validator": "^13.1.0",

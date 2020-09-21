@@ -17,7 +17,11 @@ import CIcon from '@coreui/icons-react'
 import validateRegisterAccount from "../../../validator/validateRegisterAccount";
 import {REGISTER_URL} from "../../../actions/endpoints";
 import axios from "axios";
-import {RESPONSE_STATUS_FAIL, RESPONSE_STATUS_SUCCESS} from "../../../constant/commonConstant";
+import {
+  RESPONSE_STATUS_FAIL, RESPONSE_STATUS_SUCCESS,
+  NOTIFY_TYPE_DANGER, NOTIFY_TYPE_SUCCESS, COMMON_ERROR_TEXT
+} from "../../../constant/commonConstant";
+import {showNotification} from "../../../utils/utils";
 
 function Register(props) {
   let [username, setUsername] = useState('');
@@ -32,13 +36,16 @@ function Register(props) {
     if (validateresult) return
 
     try {
-      const { data } = await axios.post(REGISTER_URL, {username, email, password});
-      if (data.status === RESPONSE_STATUS_SUCCESS) {
-        props.history.push('/login')
-        // TODO notify success
+      const response = await axios.post(REGISTER_URL, {username, email, password});
+      if (response.data.status === RESPONSE_STATUS_SUCCESS) {
+        showNotification(NOTIFY_TYPE_SUCCESS, 'Notification', 'Register success', () => {
+          props.history.push('/login')
+        }, {dismiss: {duration: 1800}});
       } else {
+        showNotification(NOTIFY_TYPE_DANGER, 'Notification', response.data.message);
       }
     } catch (e) {
+      showNotification(NOTIFY_TYPE_DANGER, 'Notification', COMMON_ERROR_TEXT);
     }
     // TODO check username ngay khi type
   }

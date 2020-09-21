@@ -6,6 +6,8 @@ import ReactDOM from 'react-dom';
 import { PersistGate } from 'redux-persist/integration/react'
 import App from './App';
 import {persistor} from './store'
+import ReactNotification from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
 
 import * as serviceWorker from './serviceWorker';
 
@@ -16,9 +18,16 @@ import store from './store'
 
 React.icons = icons
 
+const loading = (
+  <div className="pt-3 text-center">
+    <div className="sk-spinner sk-spinner-pulse"></div>
+  </div>
+)
+
 ReactDOM.render(
   <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
+    <PersistGate loading={loading} persistor={persistor}>
+      <ReactNotification />
       <App/>
     </PersistGate>
   </Provider>,
