@@ -19,8 +19,9 @@ import {LOGIN_URL} from "../../../actions/endpoints";
 import axios from "axios";
 import {login} from "../../../actions/userAction";
 import {connect} from "react-redux";
-import {RESPONSE_STATUS_SUCCESS} from "../../../constant/commonConstant";
+import {RESPONSE_STATUS_SUCCESS, NOTIFY_TYPE_SUCCESS, NOTIFY_TYPE_DANGER} from "../../../constant/commonConstant";
 import {SET_USER_PROFILE} from "../../../actions/actionType";
+import {showNotification} from "../../../utils/utils";
 
 function Login(props) {
   const [username, setUsername] = useState('');
@@ -38,7 +39,7 @@ function Login(props) {
         props.history.push('/dashboard');
       }
     } else {
-      alert(response.data.message)
+      showNotification(NOTIFY_TYPE_DANGER, 'Notification', response.data.message);
     }
   }
 

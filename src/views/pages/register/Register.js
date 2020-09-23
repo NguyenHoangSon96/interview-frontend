@@ -24,13 +24,11 @@ import {
 import {showNotification} from "../../../utils/utils";
 
 function Register(props) {
-  let [username, setUsername] = useState('');
-  let [email, setEmail] = useState('');
-  let [password, setPassword] = useState('');
-  let [repeatPassword, setRepeatPassword] = useState('');
+  let [formInputs, setFormInputs] = useState({});
   let [validateInput, setValidateInput] = useState(undefined);
 
   const submitForm = async (e) => {
+    const {username, email, password, repeatPassword} = formInputs;
     const validateresult = validateRegisterAccount(username, email, password, repeatPassword);
     setValidateInput(validateresult);
     if (validateresult) return
@@ -48,6 +46,11 @@ function Register(props) {
       showNotification(NOTIFY_TYPE_DANGER, 'Notification', COMMON_ERROR_TEXT);
     }
     // TODO check username ngay khi type
+  }
+
+  const onInput = (e) => {
+    const {name, value} = e.target;
+    setFormInputs({...formInputs, [name]: value});
   }
 
   return (
@@ -68,7 +71,7 @@ function Register(props) {
                         <CIcon name="cil-user" />
                       </CInputGroupText>
                     </CInputGroupPrepend>
-                    <CInput name="userName" onChange={(e) => setUsername(e.target.value)} type="text" placeholder="Username" autoComplete="username" />
+                    <CInput name="username" onInput={onInput} type="text" placeholder="Username" autoComplete="username" />
                     {validateInput && validateInput.userName && <div className="text-danger w-100">{validateInput.userName}</div>}
                   </CInputGroup>
 
@@ -76,7 +79,7 @@ function Register(props) {
                     <CInputGroupPrepend>
                       <CInputGroupText>@</CInputGroupText>
                     </CInputGroupPrepend>
-                    <CInput name="email" onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email" autoComplete="email" />
+                    <CInput name="email" onInput={onInput} type="email" placeholder="Email" autoComplete="email" />
                     {validateInput && validateInput.email && <div className="text-danger w-100">{validateInput.email}</div>}
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -85,7 +88,7 @@ function Register(props) {
                         <CIcon name="cil-lock-locked" />
                       </CInputGroupText>
                     </CInputGroupPrepend>
-                    <CInput name="password" onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password"/>
+                    <CInput name="password" onInput={onInput} type="password" placeholder="Password"/>
                     {validateInput && validateInput.password && <div className="text-danger w-100">{validateInput.password}</div>}
                   </CInputGroup>
                   <CInputGroup className="mb-4">
@@ -94,7 +97,7 @@ function Register(props) {
                         <CIcon name="cil-lock-locked" />
                       </CInputGroupText>
                     </CInputGroupPrepend>
-                    <CInput name="repeatPassword" onChange={(e) => setRepeatPassword(e.target.value)} type="password" placeholder="Repeat password" />
+                    <CInput name="repeatPassword" onInput={onInput} type="password" placeholder="Repeat password" />
                     {validateInput && validateInput.repeatPassword && <div className="text-danger w-100">{validateInput.repeatPassword}</div>}
                   </CInputGroup>
                   <CButton onClick={submitForm} color="success" block>Create Account</CButton>
@@ -125,10 +128,7 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-  }
-}
+const mapDispatchToProps = dispatch => {return {}}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);
 
