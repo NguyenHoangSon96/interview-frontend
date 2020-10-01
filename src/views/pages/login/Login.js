@@ -22,24 +22,28 @@ import {connect} from "react-redux";
 import {RESPONSE_STATUS_SUCCESS, NOTIFY_TYPE_SUCCESS, NOTIFY_TYPE_DANGER} from "../../../constant/commonConstant";
 import {SET_USER_PROFILE} from "../../../actions/actionType";
 import {showNotification} from "../../../utils/utils";
+import firebase, {auth} from "../../../utils/firebase/auth";
 
 function Login(props) {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const login = async () => {
-    const response = await axios.post(LOGIN_URL, {username, password});
-    if (response.data.status === RESPONSE_STATUS_SUCCESS) {
-      props.setUserProfile(response.data.data);
+    try {
+      const userFirebase = await firebase.auth().signInWithEmailAndPassword(email, password);
+      const response = await axios.post(LOGIN_URL, {idToken: userFirebase.user.getIdToken(), email, password}, {withCredentials: true});
+      if (response.data.status === RESPONSE_STATUS_SUCCESS) {
+        props.setUserProfile(response.data.data);
 
-      if (props.from) {
-        alert(props.from)
-        props.history.push(props.from);
-      } else {
-        props.history.push('/dashboard');
+        if (props.from) {
+          alert(props.from)
+          props.history.push(props.from);
+        } else {
+          props.history.push('/dashboard');
+        }
       }
-    } else {
-      showNotification(NOTIFY_TYPE_DANGER, 'Notification', response.data.message);
+    } catch (e) {
+      showNotification(NOTIFY_TYPE_DANGER, 'Notification', e.message);
     }
   }
 
@@ -60,7 +64,7 @@ function Login(props) {
                           <CIcon name="cil-user" />
                         </CInputGroupText>
                       </CInputGroupPrepend>
-                      <CInput onChange={(e) => setUsername(e.target.value)} type="text" placeholder="Username" autoComplete="username" />
+                      <CInput onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email" autoComplete="email" />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupPrepend>

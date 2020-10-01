@@ -12,8 +12,8 @@ export default [
 
   {
     _tag: 'CSidebarNavItem',
-    name: 'Bookings',
-    to: '/bookings',
+    name: 'Users',
+    to: '/users',
     icon: 'cil-speedometer', // TODO thay icon nay
   },
 

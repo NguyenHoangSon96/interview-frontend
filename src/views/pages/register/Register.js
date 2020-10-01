@@ -121,7 +121,6 @@ function Register(props) {
   )
 }
 
-
 const mapStateToProps = state => {
   return {
     user: state.user.userProfile,

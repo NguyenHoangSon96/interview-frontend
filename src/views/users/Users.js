@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
+import axios from "axios";
 import {
   CBadge,
   CCard,
@@ -12,6 +13,9 @@ import {
 } from '@coreui/react'
 
 import usersData from './UsersData'
+import {GET_USERS_URL} from "../../actions/endpoints";
+import {NOTIFY_TYPE_DANGER, RESPONSE_STATUS_FAIL} from "../../constant/commonConstant";
+
 
 const getBadge = status => {
   switch (status) {
@@ -24,57 +28,86 @@ const getBadge = status => {
 }
 
 const Users = () => {
-  const history = useHistory()
-  const queryPage = useLocation().search.match(/page=([0-9]+)/, '')
-  const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
-  const [page, setPage] = useState(currentPage)
+  const history = useHistory();
+  const [users, setUsers] = useState([]);
+  const [query, setQuery] = useState({});
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const [pages, setPages] = useState(1);
 
-  const pageChange = newPage => {
-    currentPage !== newPage && history.push(`/users?page=${newPage}`)
+  function fetchUsers() {
+    axios.get(GET_USERS_URL, {
+      params: {
+        data: JSON.stringify({page, pageSize, query})
+      },
+      withCredentials: true
+    })
+      .then(response => {
+        const {data, countAllResult} = response.data
+        setUsers(data)
+        setPages(Math.ceil(countAllResult / pageSize));
+      })
+      .catch(err => console.error(err));
   }
 
   useEffect(() => {
-    currentPage !== page && setPage(currentPage)
-  }, [currentPage, page])
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [pageSize])
+
+  useEffect(() => {
+    fetchUsers();
+  }, [page])
+
+  const onClickPage = currentPage => {
+    setPage(currentPage);
+  }
 
   return (
     <CRow>
-      <CCol xl={6}>
+      <CCol xs="12">
         <CCard>
           <CCardHeader>
             Users
             <small className="text-muted"> example</small>
           </CCardHeader>
           <CCardBody>
-          <CDataTable
-            items={usersData}
-            fields={[
-              { key: 'name', _classes: 'font-weight-bold' },
-              'registered', 'role', 'status'
-            ]}
-            hover
-            striped
-            itemsPerPage={5}
-            activePage={page}
-            clickableRows
-            onRowClick={(item) => history.push(`/users/${item.id}`)}
-            scopedSlots = {{
-              'status':
-                (item)=>(
-                  <td>
-                    <CBadge color={getBadge(item.status)}>
-                      {item.status}
-                    </CBadge>
-                  </td>
-                )
-            }}
-          />
+            <CDataTable
+              items={users}
+              fields={[
+                { key: 'username', _style: {} },
+                { key: 'email', _style: {} },
+                { key: 'role', _style: {} },
+                { key: 'createdAt', _style: {} },
+              ]}
+              columnFilter
+              tableFilter
+              itemsPerPageSelect
+              onPaginationChange={(newPageSize) => setPageSize(newPageSize)}
+              itemsPerPage={pageSize}
+              hover
+              striped
+              border
+              outlined
+              sorter
+              onColumnFilterChange={(v)=> console.log(v)}
+              // activePage={10}
+              // pagination={{
+              //   activePage: page,
+              //   pages: 10,
+              //   onActivePageChange: (i) => setPage(i)
+              // }}
+            />
           <CPagination
             activePage={page}
-            onActivePageChange={pageChange}
-            pages={5}
-            doubleArrows={false} 
-            align="center"
+            pages={pages}
+            onActivePageChange={onClickPage}
+
+            doubleArrows={false}
+            align="end"
           />
           </CCardBody>
         </CCard>

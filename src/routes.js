@@ -35,15 +35,15 @@ import React from 'react';
 // const Colors = React.lazy(() => import('./views/theme/colors/Colors'));
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'));
 // const Widgets = React.lazy(() => import('./views/widgets/Widgets'));
-// const Users = React.lazy(() => import('./views/users/Users'));
+const Users = React.lazy(() => import('./views/users/Users'));
 // const User = React.lazy(() => import('./views/users/User'));
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'));
-const Bookings = React.lazy(() => import('./views/bookings/Bookings'))
+// const Bookings = React.lazy(() => import('./views/bookings/Bookings'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
-  { path: '/bookings', name: 'Bookings', component: Bookings },
+  { path: '/users', name: 'Users', component: Users },
 ];
 
 export default routes;

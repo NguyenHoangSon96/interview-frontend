@@ -10,7 +10,7 @@ import { CContainer, CFade } from '@coreui/react'
 import routes from '../routes'
 import Dashboard from "../views/dashboard/Dashboard";
 import PrivateRoute from "../views/authen/PrivateRoute";
-import Bookings from "../views/bookings/Bookings";
+import Users from "../views/users/Users";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -25,7 +25,7 @@ const TheContent = () => {
         <Suspense fallback={loading}>
           <Switch>
             <PrivateRoute path="/dashboard" component={Dashboard}/>
-            <PrivateRoute path="/bookings" component={Bookings}/>
+            <PrivateRoute path="/users" component={Users}/>
             {/*{routes.map((route, idx) => {*/}
             {/*  return route.component && (*/}
             {/*    <Route*/}

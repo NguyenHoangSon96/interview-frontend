@@ -16,7 +16,7 @@ export default function (useName, email, password, repeatPassword ) {
     error.email = emailError;
   }
 
-  const passwordError = validatePassword(password, 'Password', 5, 10);
+  const passwordError = validatePassword(password, 'Password', 6, 10);
   if (passwordError) {
     error.password = passwordError;
   }
