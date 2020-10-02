@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import _ from 'lodash'
 import { useHistory, useLocation } from 'react-router-dom'
-import axios from "axios";
+import axios from "axios"
+import moment from 'moment'
 import {
-  CBadge,
   CCard,
   CCardBody,
   CCardHeader,
@@ -12,7 +13,6 @@ import {
   CPagination
 } from '@coreui/react'
 
-import usersData from './UsersData'
 import {GET_USERS_URL} from "../../actions/endpoints";
 import {NOTIFY_TYPE_DANGER, RESPONSE_STATUS_FAIL} from "../../constant/commonConstant";
 
@@ -27,7 +27,7 @@ const getBadge = status => {
   }
 }
 
-const Users = () => {
+function Users() {
   const history = useHistory();
   const [users, setUsers] = useState([]);
   const [query, setQuery] = useState({});
@@ -35,36 +35,28 @@ const Users = () => {
   const [pageSize, setPageSize] = useState(5);
   const [pages, setPages] = useState(1);
 
-  function fetchUsers() {
-    axios.get(GET_USERS_URL, {
-      params: {
-        data: JSON.stringify({page, pageSize, query})
-      },
-      withCredentials: true
-    })
-      .then(response => {
-        const {data, countAllResult} = response.data
-        setUsers(data)
-        setPages(Math.ceil(countAllResult / pageSize));
+  const setDataForTable = async () => {
+    let response;
+    try {
+      response = await axios.get(GET_USERS_URL, {
+        params: {data: JSON.stringify({page, pageSize, query: _.every(query, _.isEmpty) ? undefined : query })},
+        withCredentials: true
       })
-      .catch(err => console.error(err));
+    } catch (err) {
+      console.error(err);
+    }
+    setUsers(response.data.data);
+    setPages(Math.ceil(response.data.countAllResult / pageSize));
   }
 
   useEffect(() => {
-    fetchUsers();
+    setDataForTable();
   }, []);
 
-  useEffect(() => {
-    fetchUsers();
-  }, [pageSize])
 
   useEffect(() => {
-    fetchUsers();
-  }, [page])
-
-  const onClickPage = currentPage => {
-    setPage(currentPage);
-  }
+    setDataForTable();
+  }, [page, pageSize, query]);
 
   return (
     <CRow>
@@ -72,19 +64,26 @@ const Users = () => {
         <CCard>
           <CCardHeader>
             Users
-            <small className="text-muted"> example</small>
           </CCardHeader>
           <CCardBody>
             <CDataTable
               items={users}
               fields={[
+                { key: '#', _style: {width: '5%'} },
                 { key: 'username', _style: {} },
                 { key: 'email', _style: {} },
                 { key: 'role', _style: {} },
                 { key: 'createdAt', _style: {} },
               ]}
-              columnFilter
+              scopedSlots={{
+                '#': (item, index) => <td style={{textAlign: 'center'}}>{index + 1}</td>,
+                createdAt: (item, index) => {
+                  return <td>{item.createdAt ? moment(item.createdAt).format('DD/MM/YYYY') : ''}</td>
+                }
+              }
+              }
               tableFilter
+              columnFilter
               itemsPerPageSelect
               onPaginationChange={(newPageSize) => setPageSize(newPageSize)}
               itemsPerPage={pageSize}
@@ -93,19 +92,13 @@ const Users = () => {
               border
               outlined
               sorter
-              onColumnFilterChange={(v)=> console.log(v)}
-              // activePage={10}
-              // pagination={{
-              //   activePage: page,
-              //   pages: 10,
-              //   onActivePageChange: (i) => setPage(i)
-              // }}
+              onColumnFilterChange={(v) => setQuery(v)}
+              onTableFilterChange={(v) => setQuery({email: v, username: v})}
             />
           <CPagination
             activePage={page}
             pages={pages}
-            onActivePageChange={onClickPage}
-
+            onActivePageChange={p => setPage(p)}
             doubleArrows={false}
             align="end"
           />
