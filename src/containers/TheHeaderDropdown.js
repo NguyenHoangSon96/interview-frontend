@@ -8,15 +8,25 @@ import {
   CImg
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import {LOGOUT, SET_USER_PROFILE} from "../actions/actionType";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
+import axios from "axios";
+
+import {LOGOUT_URL} from "../actions/endpoints";
+import {LOGOUT} from "../actions/actionType";
+import {showNotification} from "../utils/utils";
+import {NOTIFY_TYPE_DANGER} from "../constant/commonConstant";
 
 const TheHeaderDropdown = (props) => {
 
-  const logout = () => {
-    props.logout();
-    props.history.push('/login');
+  const logout = async () => {
+    try {
+      await axios.get(LOGOUT_URL, {withCredentials: true});
+      props.logout();
+      props.history.push('/login');
+    } catch (err) {
+      showNotification(NOTIFY_TYPE_DANGER, 'Notification', err.message);
+    }
   }
 
   return (

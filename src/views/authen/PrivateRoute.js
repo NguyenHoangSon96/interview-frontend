@@ -1,4 +1,6 @@
 import * as React from 'react';
+import Cookies from 'js-cookie';
+
 import {Route, Redirect} from "react-router-dom";
 import {connect} from "react-redux";
 
@@ -7,8 +9,7 @@ function PrivateRoute({component: Component, userProfile, ...rest}) {
   return (
     <Route {...rest} render={props => {
       return (
-        userProfile ?
-        <Component {...props}/> : <Redirect to={{pathname: '/login', state: {from: props.location} }}/>
+        userProfile && Cookies.get('authenticated') ? <Component {...props}/> : <Redirect to={{pathname: '/login', state: {from: props.location} }}/>
       )
      }
     }/>

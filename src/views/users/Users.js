@@ -15,6 +15,7 @@ import {
 
 import {GET_USERS_URL} from "../../actions/endpoints";
 import {NOTIFY_TYPE_DANGER, RESPONSE_STATUS_FAIL} from "../../constant/commonConstant";
+import {showNotification} from "../../utils/utils";
 
 
 const getBadge = status => {
@@ -43,10 +44,10 @@ function Users() {
         withCredentials: true
       })
     } catch (err) {
-      console.error(err);
+      showNotification(NOTIFY_TYPE_DANGER, 'Notification', err.message);
     }
-    setUsers(response.data.data);
-    setPages(Math.ceil(response.data.countAllResult / pageSize));
+    setUsers(response?.data?.data);
+    setPages(Math.ceil(response?.data?.countAllResult ? response?.data?.countAllResult / pageSize : 1 ));
   }
 
   useEffect(() => {
@@ -69,7 +70,7 @@ function Users() {
             <CDataTable
               items={users}
               fields={[
-                { key: '#', _style: {width: '5%'} },
+                { key: '#', _style: {width: '5%'}, filter: false },
                 { key: 'username', _style: {} },
                 { key: 'email', _style: {} },
                 { key: 'role', _style: {} },

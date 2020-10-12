@@ -32,9 +32,8 @@ function Login(props) {
     try {
       const userFirebase = await firebase.auth().signInWithEmailAndPassword(email, password);
       const response = await axios.post(LOGIN_URL, {idToken: userFirebase.user.getIdToken(), email, password}, {withCredentials: true});
-      if (response.data.status === RESPONSE_STATUS_SUCCESS) {
-        props.setUserProfile(response.data.data);
-
+      if (response.data?.status === RESPONSE_STATUS_SUCCESS) {
+        props.setUserProfile(response.data?.data);
         if (props.from) {
           alert(props.from)
           props.history.push(props.from);
