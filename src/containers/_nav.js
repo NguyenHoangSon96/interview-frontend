@@ -14,7 +14,13 @@ export default [
     _tag: 'CSidebarNavItem',
     name: 'Users',
     to: '/users',
-    icon: 'cil-speedometer', // TODO thay icon nay
+    icon: 'cil-user',
+  },
+  {
+    _tag: 'CSidebarNavItem',
+    name: 'Youtube',
+    to: '/youtube',
+    icon: 'cib-youtube',
   },
 
 

@@ -16,6 +16,7 @@ import {
 import {GET_USERS_URL} from "../../actions/endpoints";
 import {NOTIFY_TYPE_DANGER, RESPONSE_STATUS_FAIL} from "../../constant/commonConstant";
 import {showNotification} from "../../utils/utils";
+import CIcon from '@coreui/icons-react'
 
 
 const getBadge = status => {
@@ -75,11 +76,18 @@ function Users() {
                 { key: 'email', _style: {} },
                 { key: 'role', _style: {} },
                 { key: 'createdAt', _style: {} },
+                { key: 'actions', _style: {} },
               ]}
               scopedSlots={{
                 '#': (item, index) => <td style={{textAlign: 'center'}}>{index + 1}</td>,
-                createdAt: (item, index) => {
-                  return <td>{item.createdAt ? moment(item.createdAt).format('DD/MM/YYYY') : ''}</td>
+                createdAt: (item, index) => {return <td>{item.createdAt ? moment(item.createdAt).format('DD/MM/YYYY') : ''}</td>},
+                actions: (item, index) => {
+                  return (
+                    <td className="text-center">
+                      <CIcon name="cil-pencil" size={'lg'} className="text-warning cursor-pointer" />
+                      <CIcon name="cil-delete" size={'lg'} className="ml-1 text-danger cursor-pointer" />
+                    </td>
+                  )
                 }
               }
               }

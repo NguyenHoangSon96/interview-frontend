@@ -36,6 +36,7 @@ import React from 'react';
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'));
 // const Widgets = React.lazy(() => import('./views/widgets/Widgets'));
 const Users = React.lazy(() => import('./views/users/Users'));
+const Youtube = React.lazy(() => import('./views/youtube/Youtube'));
 // const User = React.lazy(() => import('./views/users/User'));
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'));
 // const Bookings = React.lazy(() => import('./views/bookings/Bookings'))
@@ -44,6 +45,7 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/users', name: 'Users', component: Users },
+  { path: '/youtube', name: 'Youtube', component: Youtube },
 ];
 
 export default routes;
