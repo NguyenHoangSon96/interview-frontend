@@ -2,6 +2,10 @@ import React, {useState, useEffect} from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {CButton, CEmbed, CInput, CInputGroup, CInputGroupAppend} from "@coreui/react";
 import CIcon from "@coreui/icons-react";
+import axios from "axios";
+import {GET_COMMENTS_BY_VIDEO_ID_URL} from "../../actions/endpoints";
+import {showNotification} from "../../utils/utils";
+import {NOTIFY_TYPE_DANGER} from "../../constant/commonConstant";
 
 const style = {
   height: 30,
@@ -14,7 +18,7 @@ function Youtube(props) {
   const [items, setItems] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [searchVideoId, setSearchVideoId] = useState('');
-  const [videoUrl, setVideoUrl] = useState('');
+  const [videoUrl, setVideoUrl] = useState('https://www.youtube.com/embed/QPjbt7uGDMmEQP-E');
 
   useEffect(() => {
     const arr = [];
@@ -36,8 +40,16 @@ function Youtube(props) {
     }, 500);
   }
 
-  const searchVideo = () => {
-    console.log(searchVideoId)
+  const searchVideo = async () => {
+    let response;
+    try {
+      response = await axios.get(GET_COMMENTS_BY_VIDEO_ID_URL, {
+        params: {videoId: searchVideoId},
+        withCredentials: true
+      })
+    } catch (err) {
+      showNotification(NOTIFY_TYPE_DANGER, 'Notification', err.message);
+    }
     setVideoUrl(`https://www.youtube.com/embed/${searchVideoId}`);
   }
 
@@ -45,9 +57,9 @@ function Youtube(props) {
     <React.Fragment>
       <div className="d-flex">
         <CInputGroup style={{width: '35%'}}>
-          <CInput onChange={(e) => setSearchVideoId(e.target.value)} value={searchVideoId} type="email" id="input2-group2" name="input2-group2" placeholder="Email" />
+          <CInput onChange={(e) => setSearchVideoId(e.target.value)} value={searchVideoId} type="Video Id" id="input2-group2" name="input2-group2" placeholder="Email" />
           <CInputGroupAppend>
-            <CButton onClick={searchVideo} type="button" color="primary"><CIcon name="cil-magnifying-glass" /> Search</CButton>
+            <CButton style={{padding: "0 10px"}} onClick={searchVideo} type="button" color="primary"><CIcon name="cil-magnifying-glass" /> Search</CButton>
           </CInputGroupAppend>
         </CInputGroup>
       </div>
