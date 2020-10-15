@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import YouTube from 'react-youtube';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {CButton, CEmbed, CInput, CInputGroup, CInputGroupAppend} from "@coreui/react";
 import CIcon from "@coreui/icons-react";
@@ -6,6 +7,8 @@ import axios from "axios";
 import {GET_COMMENTS_BY_VIDEO_ID_URL} from "../../actions/endpoints";
 import {showNotification} from "../../utils/utils";
 import {NOTIFY_TYPE_DANGER} from "../../constant/commonConstant";
+import {SET_USER_PROFILE} from "../../actions/actionType";
+import {connect, useDispatch, useSelector} from "react-redux";
 
 const style = {
   height: 30,
@@ -15,10 +18,11 @@ const style = {
 };
 
 function Youtube(props) {
+  const dispatch = useDispatch();
   const [items, setItems] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [searchVideoId, setSearchVideoId] = useState('');
-  const [videoUrl, setVideoUrl] = useState('https://www.youtube.com/embed/QPjbt7uGDMmEQP-E');
+  const [videoId, setVideoId] = useState('');
 
   useEffect(() => {
     const arr = [];
@@ -50,7 +54,7 @@ function Youtube(props) {
     } catch (err) {
       showNotification(NOTIFY_TYPE_DANGER, 'Notification', err.message);
     }
-    setVideoUrl(`https://www.youtube.com/embed/${searchVideoId}`);
+    setVideoId(searchVideoId);
   }
 
   return (
@@ -67,7 +71,22 @@ function Youtube(props) {
       <div className="row mt-3">
         <div className="col-8">
           <CEmbed ratio="16by9">
-            <iframe src={videoUrl} allowFullScreen/>
+            <YouTube
+              videoId={videoId}
+              onReady= {() => dispatch({type: 'SET_MINIMIZE_SIDEBAR', minimizeSidebar: true})}
+              onPlay={() => dispatch({type: 'SET_MINIMIZE_SIDEBAR', minimizeSidebar: true})}
+
+              // id={string}                       // defaults -> null
+              // className={string}                // defaults -> null
+              // containerClassName={string}       // defaults -> ''
+              // opts={obj}                        // defaults -> {}
+              // onPause={func}                    // defaults -> noop
+              // onEnd={func}                      // defaults -> noop
+              // onError={func}                    // defaults -> noop
+              // onStateChange={func}              // defaults -> noop
+              // onPlaybackRateChange={func}       // defaults -> noop
+              // onPlaybackQualityChange={func}    // defaults -> noop
+            />
           </CEmbed>
         </div>
         <div className="col-4">
@@ -92,11 +111,20 @@ function Youtube(props) {
         </div>
       </div>
 
-
-
     </React.Fragment>
   );
 };
 
+const mapStateToProps = state => {
+  return {
+    minimizeSidebar: state.minimizeSidebar,
+  }
+}
 
-export default Youtube;
+function mapDispatchToProps(dispatch) {
+  return {
+    toggleSidebar: (val) => dispatch({type: 'SET_MINIMIZE_SIDEBAR', minimizeSidebar: val })
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Youtube);

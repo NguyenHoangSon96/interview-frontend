@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   CCreateElement,
@@ -17,13 +17,20 @@ import CIcon from '@coreui/icons-react'
 // sidebar nav config
 import navigation from './_nav'
 
-const TheSidebar = () => {
+const TheSidebar = (props) => {
   const dispatch = useDispatch()
-  const show = useSelector(state => state.sidebarShow)
+  const show = useSelector(state => state.root.sidebarShow)
+  const minimizeSidebar = useSelector(state => state.root.minimizeSidebar)
+
+  const onMinimizeChange = (val) => {
+    dispatch({type: 'SET_MINIMIZE_SIDEBAR', minimizeSidebar: !val })
+  }
 
   return (
     <CSidebar
+      minimize={minimizeSidebar}
       show={show}
+      onMinimizeChange={onMinimizeChange}
       onShowChange={(val) => dispatch({type: 'set', sidebarShow: val })}
     >
       <CSidebarBrand className="d-md-down-none" to="/">
@@ -39,7 +46,6 @@ const TheSidebar = () => {
         />
       </CSidebarBrand>
       <CSidebarNav>
-
         <CCreateElement
           items={navigation}
           components={{

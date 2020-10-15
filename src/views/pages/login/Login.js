@@ -17,12 +17,11 @@ import {
 import CIcon from '@coreui/icons-react'
 import {LOGIN_URL} from "../../../actions/endpoints";
 import axios from "axios";
-import {login} from "../../../actions/userAction";
 import {connect} from "react-redux";
-import {RESPONSE_STATUS_SUCCESS, NOTIFY_TYPE_SUCCESS, NOTIFY_TYPE_DANGER} from "../../../constant/commonConstant";
+import {RESPONSE_STATUS_SUCCESS, NOTIFY_TYPE_DANGER} from "../../../constant/commonConstant";
 import {SET_USER_PROFILE} from "../../../actions/actionType";
 import {showNotification} from "../../../utils/utils";
-import firebase, {auth} from "../../../utils/firebase/auth";
+import firebase from "../../../utils/firebase/auth";
 
 function Login(props) {
   const [email, setEmail] = useState('');

@@ -2,6 +2,7 @@ let initialState = {
   loading: false,
   error: undefined,
   sidebarShow: 'responsive',
+  minimizeSidebar: true,
 }
 
 const rootReducer = (state = initialState, action) => {
@@ -15,6 +16,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         error: action.error,
+      }
+    case 'SET_MINIMIZE_SIDEBAR':
+      return {
+        ...state,
+        minimizeSidebar: action.minimizeSidebar,
       }
     default:
       return state
