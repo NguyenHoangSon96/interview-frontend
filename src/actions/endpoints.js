@@ -9,4 +9,6 @@ export const GET_USERS_URL = PREFIX + '/private/users';
 
 export const GET_COMMENTS_BY_VIDEO_ID_URL = PREFIX + '/private/comments-by-video-id';
 
+export const PERSIST_VIDEO_AND_COMMENTS_URL = PREFIX + '/private/persist-video-and-comments';
+
 export const GET_BOOKS_URL = PREFIX + '/private/books';

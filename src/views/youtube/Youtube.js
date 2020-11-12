@@ -4,7 +4,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import {CButton, CEmbed, CInput, CInputGroup, CInputGroupAppend} from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import axios from "axios";
-import {GET_COMMENTS_BY_VIDEO_ID_URL} from "../../actions/endpoints";
+import {GET_COMMENTS_BY_VIDEO_ID_URL, PERSIST_VIDEO_AND_COMMENTS_URL} from "../../actions/endpoints";
 import {showNotification} from "../../utils/utils";
 import {NOTIFY_TYPE_DANGER} from "../../constant/commonConstant";
 import {SET_USER_PROFILE} from "../../actions/actionType";
@@ -27,27 +27,15 @@ function Youtube(props) {
   useEffect(() => {
     const arr = [];
     for (let i = 0; i < 20; i++) {
-      arr.push('div '+i);
+      arr.push('Son '+i);
     }
     setItems(arr);
   }, []);
 
-  const fetchMoreData = () => {
-    if (items.length >= 80) setHasMore(false);
-    const arr = [];
-
-    setTimeout(() => {
-      for (let i = 0; i < 20; i++) {
-        arr.push('div '+i);
-      }
-      setItems([...items, ...arr]);
-    }, 500);
-  }
-
   const searchVideo = async () => {
     let response;
     try {
-      response = await axios.get(GET_COMMENTS_BY_VIDEO_ID_URL, {
+      response = await axios.get(PERSIST_VIDEO_AND_COMMENTS_URL, {
         params: {videoId: searchVideoId},
         withCredentials: true
       })
@@ -68,7 +56,7 @@ function Youtube(props) {
         </CInputGroup>
       </div>
 
-      <div className="row mt-3">
+      <div className="youtube-wrapper row mt-3">
         <div className="col-8">
           <CEmbed ratio="16by9">
             <YouTube
@@ -90,24 +78,31 @@ function Youtube(props) {
           </CEmbed>
         </div>
         <div className="col-4">
-            <InfiniteScroll
-              dataLength={items.length}
-              next={fetchMoreData}
-              hasMore={hasMore}
-              height={540}
-              loader={<h4>Loading...</h4>}
-              endMessage={
-                <p style={{ textAlign: "center" }}>
-                  <b>Yay! You have seen it all</b>
-                </p>
+            <div className="infinite-scroll">
+              {
+                items.map((v, i) => (
+                  <div className="scroll-item">{v}</div>
+                ))
               }
-            >
-              {items.map((i, index) => (
-                <div style={style} key={index}>
-                  div - #{index}
-                </div>
-              ))}
-            </InfiniteScroll>
+            </div>
+            {/*<InfiniteScroll*/}
+            {/*  dataLength={items.length}*/}
+            {/*  next={fetchMoreData}*/}
+            {/*  hasMore={hasMore}*/}
+            {/*  height={540}*/}
+            {/*  loader={<h4>Loading...</h4>}*/}
+            {/*  endMessage={*/}
+            {/*    <p style={{ textAlign: "center" }}>*/}
+            {/*      <b>Yay! You have seen it all</b>*/}
+            {/*    </p>*/}
+            {/*  }*/}
+            {/*>*/}
+            {/*  {items.map((i, index) => (*/}
+            {/*    <div style={style} key={index}>*/}
+            {/*      div - #{index}*/}
+            {/*    </div>*/}
+            {/*  ))}*/}
+            {/*</InfiniteScroll>*/}
         </div>
       </div>
 
